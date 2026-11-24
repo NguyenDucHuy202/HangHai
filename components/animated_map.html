@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>TripsLayer Maritime Vessel Simulation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- MapLibre GL CSS & JS -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+
+  <!-- Deck.gl Bundle -->
+  <script src="https://unpkg.com/deck.gl@8.9.35/dist.min.js"></script>
+
+  <!-- Google Fonts: Be Vietnam Pro & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #F8FAFC;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* Glassmorphism Light Mode Control Panel */
+    .controls-panel {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(92%, 780px);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 14px 20px;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .controls-row-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .btn-play {
+      background: #0077B6;
+      color: #FFFFFF;
+      border: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: background 0.15s ease, transform 0.1s ease;
+      flex-shrink: 0;
+    }
+    .btn-play:hover {
+      background: #0284C7;
+      transform: scale(1.04);
+    }
+
+    .slider-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: #E2E8F0;
+      height: 6px;
+      border-radius: 3px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #0077B6;
+      cursor: pointer;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+
+    .clock-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0F172A;
+      background: #F1F5F9;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #CBD5E1;
+      white-space: nowrap;
+      min-width: 190px;
+      text-align: center;
+    }
+
+    .controls-row-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 6px;
+      border-top: 1px solid #F1F5F9;
+    }
+
+    .speed-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .speed-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #64748B;
+      letter-spacing: 0.05em;
+      margin-right: 2px;
+    }
+    .btn-speed {
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      color: #334155;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-speed.active {
+      background: #0077B6;
+      border-color: #0077B6;
+      color: #FFFFFF;
+    }
+
+    .vessel-legend {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+      color: #475569;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Top stats badge */
+    .stats-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(255, 255, 255, 0.90);
+      backdrop-filter: blur(8px);
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      z-index: 999;
+      font-size: 12px;
+      color: #0F172A;
+    }
+    .stats-badge b {
+      color: #0077B6;
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <div style="position: absolute; top: 16px; left: 16px; z-index: 999; background: rgba(255, 255, 255, 0.95); border: 1px solid #FCA5A5; border-left: 4px solid #DA251D; border-radius: 8px; padding: 6px 14px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08); font-size: 12px; font-weight: 600; color: #0F172A; pointer-events: none;">
+    🇻🇳 <span style="color: #DA251D; font-weight: 700;">Chủ quyền Biển Đảo:</span> Quần đảo Hoàng Sa & Trường Sa là của Việt Nam · Biển Đông (Việt Nam)
+  </div>
+
+  <div class="stats-badge">
+    🚢 Đang mô phỏng: <b id="active-vessels-count">400</b> hải trình tàu
+  </div>
+
+  <div class="controls-panel">
+    <div class="controls-row-top">
+      <button id="btn-toggle" class="btn-play" title="Phát / Tạm dừng">⏸</button>
+      <div class="slider-container">
+        <input type="range" id="time-slider" min="0" max="101.0" step="0.1" value="0">
+      </div>
+      <div id="sim-clock" class="clock-display">2026-07-01 00:00 UTC</div>
+    </div>
+
+    <div class="controls-row-bottom">
+      <div class="speed-btn-group">
+        <span class="speed-label">Tốc độ:</span>
+        <button class="btn-speed active" data-speed="1">1x</button>
+        <button class="btn-speed" data-speed="2">2x</button>
+        <button class="btn-speed" data-speed="5">5x</button>
+        <button class="btn-speed" data-speed="10">10x</button>
+      </div>
+
+      <div class="basemap-btn-group" style="display: flex; gap: 4px; align-items: center; margin-left: 8px;">
+        <span class="speed-label">Nền:</span>
+        <button id="btn-satellite" class="btn-speed active" style="font-size: 11px;">Vệ tinh</button>
+        <button id="btn-nautical" class="btn-speed" style="font-size: 11px;">Hải đồ</button>
+      </div>
+
+      <div class="vessel-legend">
+        <div class="legend-item"><span class="legend-dot" style="background: #0077B6;"></span> Container</div>
+        <div class="legend-item"><span class="legend-dot" style="background: #D97706;"></span> Hàng rời</div>
+        <div class="legend-item"><span class="legend-dot" style="background: #0D9488;"></span> Tàu khách / Phà</div>
+        <div class="legend-item"><span class="legend-dot" style="background: #DC2626;"></span> Tàu dầu</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data placeholder injected by Python
+    const rawTripsData = __TRIPS_DATA__;
+
+    // Simulation configuration
+    const MIN_TIME = 0.0;
+    const MAX_TIME = 101.0;
+    const TRAIL_LENGTH = 8.0;
+    const BASE_TIMESTAMP_MS = Date.UTC(2026, 6, 1, 0, 0, 0); // 2026-07-01 00:00:00 UTC
+
+    let currentTime = MIN_TIME;
+    let isPlaying = true;
+    let speedMultiplier = 1.0;
+    let lastAnimTimestamp = null;
+
+    // DOM Elements
+    const btnToggle = document.getElementById('btn-toggle');
+    const timeSlider = document.getElementById('time-slider');
+    const simClock = document.getElementById('sim-clock');
+    const speedButtons = document.querySelectorAll('.btn-speed');
+    const activeCountEl = document.getElementById('active-vessels-count');
+
+    if (rawTripsData && rawTripsData.length) {
+      activeCountEl.innerText = rawTripsData.length;
+    }
+
+    // Format UTC simulation clock: YYYY-MM-DD HH:mm UTC
+    function formatSimulationClock(timeVal) {
+      const elapsedHours = timeVal;
+      const targetDate = new Date(BASE_TIMESTAMP_MS + elapsedHours * 3600 * 1000);
+      const yyyy = targetDate.getUTCFullYear();
+      const mm = String(targetDate.getUTCMonth() + 1).padStart(2, '0');
+      const dd = String(targetDate.getUTCDate()).padStart(2, '0');
+      const hh = String(targetDate.getUTCHours()).padStart(2, '0');
+      const min = String(targetDate.getUTCMinutes()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd} ${hh}:${min} UTC`;
+    }
+
+    // Photorealistic Global Satellite Imagery Style (ESRI World Imagery, token-free, neutral)
+    const SATELLITE_STYLE = {
+      version: 8,
+      sources: {
+        'satellite-tiles': {
+          type: 'raster',
+          tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+          tileSize: 256
+        }
+      },
+      layers: [
+        {
+          id: 'satellite-layer',
+          type: 'raster',
+          source: 'satellite-tiles',
+          minzoom: 0,
+          maxzoom: 19
+        }
+      ]
+    };
+    const NAUTICAL_STYLE = 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
+
+    // Initialize DeckGL overlay with MapLibre basemap (default to photorealistic satellite imagery)
+    const deckOverlay = new deck.DeckGL({
+      container: 'map',
+      mapLib: maplibregl,
+      mapStyle: SATELLITE_STYLE,
+      initialViewState: {
+        longitude: 108.0,
+        latitude: 14.0,
+        zoom: 4.6,
+        pitch: 0,
+        bearing: 0
+      },
+      controller: true
+    });
+
+    // Authoritative Vietnamese Sovereignty Points & Labels
+    const sovereigntyPoints = [
+      { coordinates: [112.0, 16.5], radius: 25000, name: "Quần đảo Hoàng Sa" },
+      { coordinates: [111.6, 16.53], radius: 12000, name: "Đảo Hoàng Sa" },
+      { coordinates: [112.33, 16.83], radius: 12000, name: "Đảo Phú Lâm" },
+      { coordinates: [111.2, 15.78], radius: 12000, name: "Đảo Tri Tôn" },
+      { coordinates: [114.2, 9.9], radius: 30000, name: "Quần đảo Trường Sa" },
+      { coordinates: [111.92, 8.64], radius: 12000, name: "Đảo Trường Sa Lớn" },
+      { coordinates: [114.33, 11.43], radius: 12000, name: "Đảo Song Tử Tây" },
+      { coordinates: [114.32, 9.88], radius: 12000, name: "Đảo Sinh Tồn" },
+      { coordinates: [114.36, 10.18], radius: 12000, name: "Đảo Nam Yết" },
+      { coordinates: [103.96, 10.25], radius: 15000, name: "Đảo Phú Quốc" },
+      { coordinates: [106.60, 8.68], radius: 15000, name: "Côn Đảo" }
+    ];
+
+    const sovereigntyLabels = [
+      { coordinates: [112.0, 16.5], text: "★ QUẦN ĐẢO HOÀNG SA (VIỆT NAM)", color: [218, 37, 29, 255], size: 13, offset: [0, -15] },
+      { coordinates: [112.0, 16.5], text: "Thuộc TP. Đà Nẵng", color: [71, 85, 105, 255], size: 10, offset: [0, 12] },
+      { coordinates: [114.2, 9.9], text: "★ QUẦN ĐẢO TRƯỜNG SA (VIỆT NAM)", color: [218, 37, 29, 255], size: 13, offset: [0, -15] },
+      { coordinates: [114.2, 9.9], text: "Thuộc Tỉnh Khánh Hòa", color: [71, 85, 105, 255], size: 10, offset: [0, 12] },
+      { coordinates: [113.2, 14.0], text: "BIỂN ĐÔNG (VIỆT NAM)", color: [2, 132, 199, 255], size: 18, offset: [0, 0] },
+      { coordinates: [103.96, 10.25], text: "Đảo Phú Quốc (VN)", color: [218, 37, 29, 240], size: 11, offset: [0, -12] },
+      { coordinates: [106.60, 8.68], text: "Côn Đảo (VN)", color: [218, 37, 29, 240], size: 11, offset: [0, -12] }
+    ];
+
+    function getTripsLayer(time) {
+      return new deck.TripsLayer({
+        id: 'maritime-trips',
+        data: rawTripsData,
+        getPath: d => d.path,
+        getTimestamps: d => d.timestamps,
+        getColor: d => d.color || [0, 119, 182],
+        opacity: 0.9,
+        widthMinPixels: 2.5,
+        rounded: true,
+        trailLength: TRAIL_LENGTH,
+        currentTime: time
+      });
+    }
+
+    function renderLayers() {
+      const sovPointsLayer = new deck.ScatterplotLayer({
+        id: 'vn-sov-points',
+        data: sovereigntyPoints,
+        getPosition: d => d.coordinates,
+        getRadius: d => d.radius,
+        getFillColor: [255, 215, 0, 255],
+        getLineColor: [218, 37, 29, 255],
+        stroked: true,
+        filled: true,
+        lineWidthMinPixels: 2.5,
+        radiusMinPixels: 4,
+        pickable: true
+      });
+
+      const sovTextLayer = new deck.TextLayer({
+        id: 'vn-sov-labels',
+        data: sovereigntyLabels,
+        getPosition: d => d.coordinates,
+        getText: d => d.text,
+        getColor: d => d.color,
+        getSize: d => d.size,
+        getPixelOffset: d => d.offset,
+        getTextAnchor: 'middle',
+        getAlignmentBaseline: 'center',
+        characterSet: 'auto',
+        fontFamily: "'Be Vietnam Pro', 'Segoe UI', 'Arial', sans-serif",
+        billboard: true,
+        backgroundColor: [255, 255, 255, 220],
+        backgroundPadding: [4, 2],
+        fontWeight: 700
+      });
+
+      deckOverlay.setProps({
+        layers: [
+          getTripsLayer(currentTime),
+          sovPointsLayer,
+          sovTextLayer
+        ]
+      });
+    }
+
+    // Animation loop
+    function animate(animTimestamp) {
+      if (!lastAnimTimestamp) lastAnimTimestamp = animTimestamp;
+      const deltaSec = (animTimestamp - lastAnimTimestamp) / 1000.0;
+      lastAnimTimestamp = animTimestamp;
+
+      if (isPlaying) {
+        // Base rate: 1 unit per real-world second * speedMultiplier
+        currentTime += deltaSec * 1.5 * speedMultiplier;
+        if (currentTime > MAX_TIME) {
+          currentTime = MIN_TIME;
+        }
+        timeSlider.value = currentTime.toFixed(1);
+        simClock.innerText = formatSimulationClock(currentTime);
+        renderLayers();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    // Controls Event Listeners
+    btnToggle.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      btnToggle.innerText = isPlaying ? '⏸' : '▶';
+    });
+
+    timeSlider.addEventListener('input', (e) => {
+      currentTime = parseFloat(e.target.value);
+      simClock.innerText = formatSimulationClock(currentTime);
+      renderLayers();
+    });
+
+    speedButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        speedButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        speedMultiplier = parseFloat(btn.getAttribute('data-speed'));
+      });
+    });
+
+    // Basemap switch listener (Satellite vs Nautical)
+    const btnSat = document.getElementById('btn-satellite');
+    const btnNaut = document.getElementById('btn-nautical');
+    if (btnSat && btnNaut) {
+      btnSat.addEventListener('click', () => {
+        btnSat.classList.add('active');
+        btnNaut.classList.remove('active');
+        try {
+          deckOverlay.getMapboxMap().setStyle(SATELLITE_STYLE);
+        } catch (e) {
+          console.error('Could not switch to satellite style:', e);
+        }
+      });
+      btnNaut.addEventListener('click', () => {
+        btnNaut.classList.add('active');
+        btnSat.classList.remove('active');
+        try {
+          deckOverlay.getMapboxMap().setStyle(NAUTICAL_STYLE);
+        } catch (e) {
+          console.error('Could not switch to nautical style:', e);
+        }
+      });
+    }
+
+    // Initial render & loop kickoff
+    renderLayers();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

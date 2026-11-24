@@ -1,0 +1,81 @@
+{
+  "build_timestamp": "2026-11-23T03:46:48.235344+00:00",
+  "status": "SUCCESS",
+  "python_version": "3.14.7",
+  "node_count": 2424,
+  "edge_count": 169888,
+  "vn_node_count": 261,
+  "vn_edge_count": 6875,
+  "raw_records_total": 1157422,
+  "clean_records_total": 1142422,
+  "library_versions": {
+    "networkx": "3.7",
+    "pandas": "3.0.6",
+    "pyarrow": "26.0.1",
+    "python_igraph": "1.0.0",
+    "pydeck": "0.9.3",
+    "searoute": "1.6.0"
+  },
+  "artifacts_manifest": {
+    "nodes.parquet": {
+      "size_bytes": 275783,
+      "modified": "2026-11-23T03:44:21.787741+00:00"
+    },
+    "edges.parquet": {
+      "size_bytes": 6014417,
+      "modified": "2026-11-23T03:44:22.509547+00:00"
+    },
+    "edges_geo.parquet": {
+      "size_bytes": 760037,
+      "modified": "2026-11-23T03:46:45.938389+00:00"
+    },
+    "trips.json": {
+      "size_bytes": 660979,
+      "modified": "2026-11-23T03:46:46.993115+00:00"
+    },
+    "communities.parquet": {
+      "size_bytes": 31420,
+      "modified": "2026-11-23T03:44:21.746733+00:00"
+    },
+    "community_eval.parquet": {
+      "size_bytes": 8393,
+      "modified": "2026-11-23T03:44:21.733670+00:00"
+    },
+    "linkpred_eval.parquet": {
+      "size_bytes": 3232,
+      "modified": "2026-11-23T03:44:40.092520+00:00"
+    },
+    "linkpred_top.parquet": {
+      "size_bytes": 47565,
+      "modified": "2026-11-23T03:44:40.099520+00:00"
+    },
+    "robustness_baseline.parquet": {
+      "size_bytes": 7174,
+      "modified": "2026-11-23T03:44:49.937791+00:00"
+    },
+    "structure_stats.json": {
+      "size_bytes": 1938,
+      "modified": "2026-11-23T03:46:36.175298+00:00"
+    },
+    "lsbci_long.parquet": {
+      "size_bytes": 1190605,
+      "modified": "2026-11-23T03:46:48.151892+00:00"
+    },
+    "lsbci_backbone.parquet": {
+      "size_bytes": 67809,
+      "modified": "2026-11-23T03:46:48.157408+00:00"
+    },
+    "daily_vn.parquet": {
+      "size_bytes": 1600631,
+      "modified": "2026-11-23T03:46:48.230263+00:00"
+    },
+    "ferry_nodes.parquet": {
+      "size_bytes": 5848,
+      "modified": "2026-11-23T03:46:48.233267+00:00"
+    },
+    "ferry_edges.parquet": {
+      "size_bytes": 5317,
+      "modified": "2026-11-23T03:46:48.234265+00:00"
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "small_world": {
+    "clustering_c": 0.0914,
+    "clustering_c_rand": 0.0404,
+    "path_length_l": 2.628,
+    "path_length_l_rand": 1.7005,
+    "sigma": 1.5,
+    "is_small_world": true
+  },
+  "scale_free": {
+    "alpha": 2.9895,
+    "x_min": 165.0,
+    "r_vs_lognormal": -59.0993,
+    "p_vs_lognormal": 2.768694647561304e-11,
+    "r_vs_exponential": -53.4126,
+    "p_vs_exponential": 1.98318732328801e-21
+  },
+  "assortativity": -0.0509,
+  "rich_club": {
+    "k_values": [
+      5,
+      10,
+      15,
+      20,
+      25,
+      50
+    ],
+    "normalized_coefficients": [
+      1.0008,
+      1.0021,
+      1.0031,
+      1.0042,
+      1.0052,
+      1.0104
+    ]
+  },
+  "reciprocity": 0.6063,
+  "density": 0.0403,
+  "diameter": 15,
+  "avg_shortest_path": 2.628,
+  "total_nodes": 2424,
+  "total_edges": 118384,
+  "lcc_nodes": 2422,
+  "girvan_newman_sea": {
+    "target_nodes": 125,
+    "levels": [
+      {
+        "level": 1,
+        "num_communities": 2,
+        "modularity": -0.0,
+        "cluster_sizes": [
+          124,
+          1
+        ]
+      },
+      {
+        "level": 2,
+        "num_communities": 3,
+        "modularity": -0.0,
+        "cluster_sizes": [
+          123,
+          1,
+          1
+        ]
+      },
+      {
+        "level": 3,
+        "num_communities": 4,
+        "modularity": -0.0,
+        "cluster_sizes": [
+          122,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "level": 4,
+        "num_communities": 5,
+        "modularity": -0.0,
+        "cluster_sizes": [
+          121,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "level": 5,
+        "num_communities": 6,
+        "modularity": 0.0001,
+        "cluster_sizes": [
+          120,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    ]
+  }
+}
