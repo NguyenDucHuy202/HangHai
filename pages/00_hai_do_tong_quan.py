@@ -128,7 +128,7 @@ render_hud(hud_cards)
 
 # 3. Sidebar Filter Controls (§10.0, §9.1, §9.2)
 with st.sidebar:
-    st.markdown("### ⚙️ Điều khiển Hải đồ")
+    st.markdown("### :material/tune: Điều khiển Hải đồ")
 
     st.markdown("#### 1. Bộ lọc Luồng tuyến & Quy mô")
     arc_limit = st.slider(
@@ -258,7 +258,7 @@ with tab_map:
     st.pydeck_chart(deck, use_container_width=True)
 
     # Top 20 Global Ports Ranking Table with interactive navigation
-    st.markdown("### 🏆 Bảng xếp hạng Top 20 Cảng biển Toàn cầu")
+    st.markdown("### :material/trophy: Bảng xếp hạng Top 20 Cảng biển Toàn cầu")
     st.caption("Cảng biển Việt Nam được tô sáng nổi bật màu đỏ. Bạn có thể chọn cảng để xem hồ sơ phân tích chi tiết.")
 
     top_cols = ["node_id", "name", "country", "iso3", "pagerank", "betweenness", "degree", "core_number", "is_vn"]
@@ -324,17 +324,17 @@ with tab_map:
     with c_nav2:
         st.write("")
         st.write("")
-        if st.button("🔎 Mở Hồ sơ cảng biển", type="primary", use_container_width=True):
+        if st.button(":material/open_in_new: Mở Hồ sơ cảng biển", type="primary", use_container_width=True):
             st.query_params["port"] = chosen_port_id
             st.switch_page("pages/01_ho_so_cang.py")
 
 with tab_trips:
-    st.markdown("#### 🚢 Hoạt ảnh Luồng tàu Di chuyển qua WebGL TripsLayer")
+    st.markdown("#### :material/directions_boat: Hoạt ảnh Luồng tàu Di chuyển qua WebGL TripsLayer")
     st.info("Mô phỏng 400 hành trình tàu hàng hải toàn cầu với thanh điều khiển tua thời gian, tốc độ (1x–10x) và đồng hồ UTC.")
     render_trips_animation(height=650)
 
 # 5. Mandatory SNA Knowledge Expander
-with st.expander("💡 Kiến thức SNA: Cấu trúc Tô-pô & Độ đo Trung tâm Mạng Hàng hải"):
+with st.expander(":material/lightbulb: Kiến thức SNA: Cấu trúc Tô-pô & Độ đo Trung tâm Mạng Hàng hải"):
     st.markdown("""
     **1. Biểu diễn Mạng Vận tải Hàng hải dưới dạng Đồ thị:**
     Mạng lưới hàng hải được mô hình hóa thành đồ thị có hướng và trọng số $G = (V, E, W)$, trong đó:

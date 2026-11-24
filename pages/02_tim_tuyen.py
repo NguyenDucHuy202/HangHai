@@ -76,25 +76,25 @@ port_labels = {
 }
 
 # Quick Route Presets
-st.markdown("##### ⚡ Hải trình Mẫu Phổ biến (Quick Presets)")
+st.markdown("##### :material/bolt: Hải trình Mẫu Phổ biến (Quick Presets)")
 col_p1, col_p2, col_p3, col_p4 = st.columns(4)
 with col_p1:
-    if st.button("🚢 Cái Mép ➔ Rotterdam", use_container_width=True):
+    if st.button(":material/directions_boat: Cái Mép ➔ Rotterdam", use_container_width=True):
         st.session_state["src_selector"] = "port903"
         st.session_state["dst_selector"] = "port1114"
         st.rerun()
 with col_p2:
-    if st.button("🚢 Hải Phòng ➔ Singapore", use_container_width=True):
+    if st.button(":material/directions_boat: Hải Phòng ➔ Singapore", use_container_width=True):
         st.session_state["src_selector"] = "port434"
         st.session_state["dst_selector"] = "port1201"
         st.rerun()
 with col_p3:
-    if st.button("🚢 TP.HCM ➔ Thượng Hải", use_container_width=True):
+    if st.button(":material/directions_boat: TP.HCM ➔ Thượng Hải", use_container_width=True):
         st.session_state["src_selector"] = "port903"
         st.session_state["dst_selector"] = "port1182"
         st.rerun()
 with col_p4:
-    if st.button("🚢 Đà Nẵng ➔ Los Angeles", use_container_width=True):
+    if st.button(":material/directions_boat: Đà Nẵng ➔ Los Angeles", use_container_width=True):
         st.session_state["src_selector"] = "port819"
         st.session_state["dst_selector"] = "port240"
         st.rerun()
@@ -141,7 +141,7 @@ with col_opt2:
     k_val = st.slider("Số tuyến hải trình thay thế (k):", min_value=1, max_value=5, value=3)
 
 # Chokepoints and Country Avoidance Expander
-with st.expander("🛡️ Tùy chọn tránh điểm nghẽn & vùng biển (Chokepoint & Country Avoidance)", expanded=False):
+with st.expander(":material/shield: Tùy chọn tránh điểm nghẽn & vùng biển (Chokepoint & Country Avoidance)", expanded=False):
     col_av1, col_av2 = st.columns(2)
     with col_av1:
         avoid_malacca = st.checkbox("Tránh Eo biển Malacca (Singapore, Tanjung Pelepas, Port Klang)", value=False)
@@ -331,7 +331,7 @@ def get_route_view_state(coords: list[list[float]]) -> pdk.ViewState:
     return pdk.ViewState(latitude=center_lat, longitude=center_lon, zoom=zoom, pitch=0, bearing=0)
 
 if k_paths and len(k_paths) > 0:
-    st.markdown("### 🗺️ Hải đồ Tuyến đường biển Bathymetric Thực tế")
+    st.markdown("### :material/map: Hải đồ Tuyến đường biển Bathymetric Thực tế")
 
     map_layers = []
 
@@ -436,7 +436,7 @@ if k_paths and len(k_paths) > 0:
     st.pydeck_chart(deck_map, use_container_width=True)
 
     # 7. Interactive Plotly Voyage Timeline (Horizontal Stacked Bar)
-    st.markdown("### ⏱️ Dòng thời gian Hải trình các Chặng (Voyage Timeline)")
+    st.markdown("### :material/schedule: Dòng thời gian Hải trình các Chặng (Voyage Timeline)")
     st.caption("Chi tiết phân bổ thời gian và khoảng cách từng chặng của các tuyến lựa chọn")
 
     fig_timeline = go.Figure()
@@ -480,7 +480,7 @@ if k_paths and len(k_paths) > 0:
     st.plotly_chart(fig_timeline, use_container_width=True)
 
     # 8. Comparison Table across K Routes
-    st.markdown("### 📊 Bảng So sánh Chi tiết các Tuyến Lựa chọn")
+    st.markdown("### :material/analytics: Bảng So sánh Chi tiết các Tuyến Lựa chọn")
     summary_rows = []
     for r_item in k_paths:
         r_path = r_item["path"]
@@ -510,7 +510,7 @@ else:
     st.warning("⚠️ Không tìm thấy hải trình kết nối giữa hai cảng với các điều kiện ràng buộc đã chọn. Vui lòng nới lỏng các bộ lọc tránh điểm nghẽn hoặc chọn cảng khác.")
 
 # 9. Dijkstra vs A* Search Performance Benchmark Expander
-with st.expander("⚡ So chuẩn hiệu năng: Dijkstra vs A* Search trên Tuyến đã chọn"):
+with st.expander(":material/speed: So chuẩn hiệu năng: Dijkstra vs A* Search trên Tuyến đã chọn"):
     if src_port in G and dst_port in G:
         try:
             # Benchmark Dijkstra stopping at target
@@ -553,7 +553,7 @@ with st.expander("⚡ So chuẩn hiệu năng: Dijkstra vs A* Search trên Tuy�
         st.info("Vui lòng chọn hai cảng hợp lệ để thực thi so chuẩn thuật toán.")
 
 # 10. Mandatory SNA Knowledge Expander
-with st.expander("💡 Kiến thức SNA: Thuật toán Dijkstra, A* và K-Shortest Paths (Yen)"):
+with st.expander(":material/lightbulb: Kiến thức SNA: Thuật toán Dijkstra, A* và K-Shortest Paths (Yen)"):
     st.markdown("""
     **1. Thuật toán Dijkstra trên Đồ thị Hàng hải:**
     Tìm đường đi ngắn nhất từ đỉnh nguồn $s$ đến mọi đỉnh khác trong đồ thị có trọng số không âm:

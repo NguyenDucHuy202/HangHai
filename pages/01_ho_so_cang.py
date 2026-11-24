@@ -117,7 +117,7 @@ render_hud(hud_cards)
 col_dossier, col_radar = st.columns([5, 5])
 
 with col_dossier:
-    st.subheader("📋 Thẻ lý lịch & Thông số kỹ thuật")
+    st.subheader(":material/badge: Thẻ lý lịch & Thông số kỹ thuật")
     lat = float(port_data.get("lat", 0.0))
     lon = float(port_data.get("lon", 0.0))
     nautical_str = format_nautical_coords(lat, lon)
@@ -139,7 +139,7 @@ with col_dossier:
     st.dataframe(info_df, use_container_width=True, hide_index=True)
 
 with col_radar:
-    st.subheader("🕸️ Đánh giá Đa chiều (Percentile Radar)")
+    st.subheader(":material/radar: Đánh giá Đa chiều (Percentile Radar)")
     st.caption("Chuẩn hóa bách phân vị (0–100%) so sánh với Top 10 Cảng biển Việt Nam và Chuẩn Siêu cảng Singapore")
 
     metrics = ["degree", "pagerank", "betweenness", "closeness_time", "eigenvector", "core_number"]
@@ -253,7 +253,7 @@ with col_radar:
 st.markdown("---")
 
 # 5. Ego-Network Map Section
-st.subheader("🌐 Mạng lưới Lân cận (Ego-Network)")
+st.subheader(":material/hub: Mạng lưới Lân cận (Ego-Network)")
 col_ctrl1, col_ctrl2 = st.columns([4, 6])
 with col_ctrl1:
     ego_radius = st.slider(
@@ -412,7 +412,7 @@ st.pydeck_chart(ego_deck, use_container_width=True)
 col_table, col_ts = st.columns([5, 5])
 
 with col_table:
-    st.subheader("📑 Bảng Cảng Biển Lân cận Trực tiếp")
+    st.subheader(":material/table_rows: Bảng Cảng Biển Lân cận Trực tiếp")
     st.caption("Các cảng đối tác có luồng tàu chạy trực tiếp với cảng đang chọn")
 
     out_e = edges_df[edges_df["source"] == selected_port_id].copy()
@@ -460,7 +460,7 @@ with col_table:
         st.info("Không có liên kết lân cận trực tiếp.")
 
 with col_ts:
-    st.subheader("📊 Phân tích Hoạt động & Đối tác")
+    st.subheader(":material/analytics: Phân tích Hoạt động & Đối tác")
     
     # Matching logic for Vietnamese ports in PortWatch daily_vn
     VN_PORTWATCH_ALIAS = {
@@ -563,7 +563,7 @@ with col_ts:
             st.info("Chưa có dữ liệu đối tác cho cảng này.")
 
 # 7. Mandatory SNA Knowledge Expander
-with st.expander("💡 Kiến thức SNA: Lỗ hổng Cấu trúc (Structural Holes) & Chỉ số Ràng buộc Burt"):
+with st.expander(":material/lightbulb: Kiến thức SNA: Lỗ hổng Cấu trúc (Structural Holes) & Chỉ số Ràng buộc Burt"):
     st.markdown("""
     **1. Lý thuyết Lỗ hổng Cấu trúc (Ronald Burt, 1992):**
     Trong mạng lưới vận tải hàng hải toàn cầu, các cảng biển không kết nối đồng nhất với nhau mà phân chia thành các cụm thị trường địa phương. Khi hai nhóm cảng không có tuyến tàu nối trực tiếp, giữa chúng tồn tại một "lỗ hổng cấu trúc" (structural hole).

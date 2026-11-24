@@ -405,7 +405,7 @@ with tab_map:
     st.pydeck_chart(deck, use_container_width=True)
 
     # Top 10 Bilateral Partners Table
-    st.markdown(f"#### 📋 Top 10 Đối tác Vận tải Container Song phương Hàng đầu của Việt Nam ({selected_quarter})")
+    st.markdown(f"#### :material/table_rows: Top 10 Đối tác Vận tải Container Song phương Hàng đầu của Việt Nam ({selected_quarter})")
     if not vn_partners_q.empty:
         top10_vn = vn_partners_q.head(10).copy()
         # Check if in backbone
@@ -416,7 +416,7 @@ with tab_map:
             "Hạng": [f"#{i+1}" for i in range(len(top10_vn))],
             "Đối tác Quốc gia": top10_vn["partner"],
             "Điểm số LSBCI": top10_vn["value"].map(lambda v: f"{float(v):.4f}"),
-            "Thuộc Khung xương Disparity": top10_vn["is_in_backbone"].map(lambda b: "✅ Cốt lõi (α ≤ 0.15)" if b else "⚪ Thường nhật"),
+            "Thuộc Khung xương Disparity": top10_vn["is_in_backbone"].map(lambda b: ":material/verified: Cốt lõi (α ≤ 0.15)" if b else "⚪ Thường nhật"),
         })
         st.dataframe(display_df, use_container_width=True, hide_index=True)
     else:
@@ -510,7 +510,7 @@ with tab_trends:
     st.plotly_chart(fig_asean, use_container_width=True)
 
     # Correlation Analysis with PortWatch Calls
-    st.markdown("#### ⚓ Tương quan giữa Lượt tàu Ghé Cảng Việt Nam (PortWatch) và Chỉ số LSBCI")
+    st.markdown("#### :material/scatter_plot: Tương quan giữa Lượt tàu Ghé Cảng Việt Nam (PortWatch) và Chỉ số LSBCI")
 
     daily_copy = daily_vn.copy()
     daily_copy["date"] = pd.to_datetime(daily_copy["date"])
@@ -711,7 +711,7 @@ with tab_sankey:
 # 4. Mandatory "💡 Kiến thức SNA" Expander
 # ---------------------------------------------------------------------------
 
-with st.expander("💡 Kiến thức SNA: Chỉ số UNCTAD LSBCI & Bộ lọc Đa quy mô Serrano Disparity Filter"):
+with st.expander(":material/lightbulb: Kiến thức SNA: Chỉ số UNCTAD LSBCI & Bộ lọc Đa quy mô Serrano Disparity Filter"):
     st.markdown("""
     **1. Chỉ số Kết nối Song phương LSBCI (UNCTAD):**
     LSBCI (Liner Shipping Bilateral Connectivity Index) do UNCTAD tính toán hằng quý là chỉ số đo lường mức độ kết nối vận tải container trực tiếp giữa hai quốc gia, tích hợp 5 thành phần chuẩn hóa:

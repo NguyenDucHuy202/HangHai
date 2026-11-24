@@ -159,7 +159,7 @@ with tab_recommend:
 
     with col_select:
         selected_label = st.selectbox(
-            "⚓ Chọn cảng Việt Nam (sắp xếp theo thứ hạng PageRank toàn cầu):",
+            ":material/directions_boat: Chọn cảng Việt Nam (sắp xếp theo thứ hạng PageRank toàn cầu):",
             options=port_options,
             index=default_idx if default_idx < len(port_options) else 0,
             key="select_vn_port_linkpred",
@@ -169,7 +169,7 @@ with tab_recommend:
 
     with col_filter:
         continent_filter = st.multiselect(
-            "🌍 Lọc khu vực đối tác quốc tế:",
+            ":material/public: Lọc khu vực đối tác quốc tế:",
             options=["Châu Á", "Châu Âu", "Châu Mỹ", "Châu Đại Dương", "Châu Phi"],
             default=[],
             help="Để trống để hiển thị tất cả các khu vực địa lý toàn cầu",
@@ -246,7 +246,7 @@ with tab_recommend:
             })
 
     # Display Top 10 Table
-    st.markdown(f"#### 📋 Top 10 Tuyến biển Đề xuất cho `{selected_port_info.get('name', 'Cảng')}`")
+    st.markdown(f"#### :material/list_alt: Top 10 Tuyến biển Đề xuất cho `{selected_port_info.get('name', 'Cảng')}`")
     if enriched_rows:
         df_table = pd.DataFrame(enriched_rows)
         st.dataframe(df_table, use_container_width=True, hide_index=True)
@@ -254,7 +254,7 @@ with tab_recommend:
         st.info("Không tìm thấy tuyến đề xuất phù hợp với bộ lọc khu vực đã chọn.")
 
     # Interactive Pydeck Map
-    st.markdown("#### 🗺️ Bản đồ Không gian Trực quan hoá Cung đề xuất (Amber Arcs)")
+    st.markdown("#### :material/map: Bản đồ Không gian Trực quan hoá Cung đề xuất (Amber Arcs)")
 
     # Build layers
     map_layers: List[pdk.Layer] = [
@@ -350,7 +350,7 @@ with tab_benchmark:
     st.caption("Kiểm định định lượng trên tập kiểm thử 10% cạnh ẩn (với 100% mẫu âm cân bằng):")
 
     # Table of evaluation metrics
-    st.markdown("#### 📊 Bảng Đánh giá Hiệu năng Tổng thể")
+    st.markdown("#### :material/analytics: Bảng Đánh giá Hiệu năng Tổng thể")
     eval_table_rows = []
     for _, row in link_eval.iterrows():
         m_name = str(row["metric"])
@@ -383,7 +383,7 @@ with tab_benchmark:
     st.dataframe(pd.DataFrame(eval_table_rows), use_container_width=True, hide_index=True)
 
     # Generate Analytical ROC & PR curves
-    st.markdown("#### 📈 Đường cong Kiểm định Hiệu năng (ROC Curves & Precision-Recall Curves)")
+    st.markdown("#### :material/trending_up: Đường cong Kiểm định Hiệu năng (ROC Curves & Precision-Recall Curves)")
 
     col_roc, col_pr = st.columns(2)
 
@@ -475,7 +475,7 @@ with tab_benchmark:
         st.plotly_chart(fig_pr, use_container_width=True)
 
     # Side-by-side Bar Chart
-    st.markdown("#### 📊 So sánh Trực quan AUC-ROC và Average Precision giữa 6 Mô hình")
+    st.markdown("#### :material/bar_chart: So sánh Trực quan AUC-ROC và Average Precision giữa 6 Mô hình")
     fig_bar = go.Figure()
     m_names = link_eval["metric"].tolist()
     fig_bar.add_trace(go.Bar(
@@ -509,7 +509,7 @@ with tab_benchmark:
 # 3. Mandatory "💡 Kiến thức SNA" Expander
 # ---------------------------------------------------------------------------
 
-with st.expander("💡 Kiến thức SNA: Dự đoán Liên kết & Tại sao AA / RA Phạt Siêu Hub trong Mạng Trục - Nan hoa (Hub-and-Spoke)"):
+with st.expander(":material/lightbulb: Kiến thức SNA: Dự đoán Liên kết & Tại sao AA / RA Phạt Siêu Hub trong Mạng Trục - Nan hoa (Hub-and-Spoke)"):
     st.markdown("""
     **1. Bản chất Bài toán Dự đoán Liên kết (Link Prediction Problem):**
     Cho mạng lưới hàng hải quan sát tại hiện tại $G = (V, E)$, nhiệm vụ là ước lượng xác suất xuất hiện một tuyến vận tải biển mới giữa hai cảng $u$ và $v$ chưa từng có kết nối trực tiếp ($(u, v) \\notin E$).

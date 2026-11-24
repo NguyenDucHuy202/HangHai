@@ -212,7 +212,7 @@ st.markdown("---")
 col_map, col_panel = st.columns([7, 3])
 
 with col_map:
-    st.markdown(f"##### 🗺️ Bản đồ Phân cụm Hàng hải: {algo_short} (Bảng màu 20 Contrast)")
+    st.markdown(f"##### :material/map: Bản đồ Phân cụm Hàng hải: {algo_short} (Bảng màu 20 Contrast)")
     deck_layers = [
         ports_layer(map_nodes, metric_col="pagerank", color_by="community"),
         vn_stars_layer(map_nodes),
@@ -230,7 +230,7 @@ with col_panel:
     dominant_vn_comm = int(vn_comm_counts.index[0]) if len(vn_comm_counts) > 0 else 0
 
     st.info(
-        f"📍 **Cộng đồng chủ đạo của Việt Nam:** **Cụm #{dominant_vn_comm}** "
+        f":material/location_on: **Cộng đồng chủ đạo của Việt Nam:** **Cụm #{dominant_vn_comm}** "
         f"({vn_comm_counts.iloc[0]} / {len(vn_in_network)} cảng VN)."
     )
 
@@ -270,7 +270,7 @@ tab_benchmark, tab_gn, tab_stability = st.tabs([
 # TAB 1: ALGORITHM BENCHMARK & 6x6 NMI/ARI HEATMAPS
 # ---------------------------------------------------------------------------
 with tab_benchmark:
-    st.markdown("#### 📊 So chuẩn Toàn diện 6 Thuật toán Phát hiện Cộng đồng")
+    st.markdown("#### :material/analytics: So chuẩn Toàn diện 6 Thuật toán Phát hiện Cộng đồng")
     st.caption("Đối chuẩn Modularity Q, độ phủ (Coverage), hiệu suất (Performance) và thời gian thực thi (Runtime)")
 
     # Display evaluation table
@@ -315,7 +315,7 @@ with tab_benchmark:
     col_h1, col_h2 = st.columns(2)
 
     with col_h1:
-        st.markdown("##### 🌡️ Ma trận Nhiệt NMI Pairwise (6x6)")
+        st.markdown("##### :material/thermostat: Ma trận Nhiệt NMI Pairwise (6x6)")
         fig_nmi = go.Figure(data=go.Heatmap(
             z=nmi_matrix,
             x=algo_names,
@@ -336,7 +336,7 @@ with tab_benchmark:
         st.plotly_chart(fig_nmi, use_container_width=True)
 
     with col_h2:
-        st.markdown("##### 🌡️ Ma trận Nhiệt ARI Pairwise (6x6)")
+        st.markdown("##### :material/thermostat: Ma trận Nhiệt ARI Pairwise (6x6)")
         fig_ari = go.Figure(data=go.Heatmap(
             z=ari_matrix,
             x=algo_names,
@@ -357,7 +357,7 @@ with tab_benchmark:
         st.plotly_chart(fig_ari, use_container_width=True)
 
     # Cluster sizes distribution for active algorithm
-    st.markdown(f"##### 📊 Phân bố Quy mô Cộng đồng ({algo_short})")
+    st.markdown(f"##### :material/bar_chart: Phân bố Quy mô Cộng đồng ({algo_short})")
     counts_df = map_nodes["active_comm"].value_counts().reset_index()
     counts_df.columns = ["Mã cộng đồng", "Số cảng"]
     counts_df["Mã cộng đồng"] = counts_df["Mã cộng đồng"].apply(lambda x: f"Cụm #{x}")
@@ -383,7 +383,7 @@ with tab_benchmark:
 # TAB 2: GIRVAN-NEWMAN SOUTHEAST ASIA FORCE-DIRECTED GRAPH
 # ---------------------------------------------------------------------------
 with tab_gn:
-    st.markdown("#### ✂️ Thuật toán Girvan–Newman trên Mạng con Đông Nam Á")
+    st.markdown("#### :material/content_cut: Thuật toán Girvan–Newman trên Mạng con Đông Nam Á")
     st.caption("Phân rã thứ bậc dựa trên độ trung gian cạnh (Edge Betweenness) trên ~125 cảng thuộc 9 nền kinh tế ASEAN")
 
     gn_step = st.slider("Bước phân rã thứ bậc (Division Step):", min_value=1, max_value=5, value=2)
@@ -499,7 +499,7 @@ with tab_gn:
 # TAB 3: STABILITY ANALYSIS (10-SEED NMI BOXPLOT)
 # ---------------------------------------------------------------------------
 with tab_stability:
-    st.markdown("#### 🎯 Đánh giá Độ Ổn định Cấu trúc Phân hoạch (10-Seed Stability)")
+    st.markdown("#### :material/adjust: Đánh giá Độ Ổn định Cấu trúc Phân hoạch (10-Seed Stability)")
     st.caption("Khảo sát mức độ dao động NMI khi thuật toán chạy qua 10 lượt khởi tạo ngẫu nhiên khác nhau")
 
     # Build simulated distribution from mean and std recorded in community_eval
@@ -537,13 +537,13 @@ with tab_stability:
     st.plotly_chart(fig_box, use_container_width=True)
 
     st.info(
-        "💡 **Nhận định Chuyên gia:** Các thuật toán **Greedy Modularity** và **Girvan-Newman** đạt độ ổn định tuyệt đối (Std = 0.000) "
+        ":material/tips_and_updates: **Nhận định Chuyên gia:** Các thuật toán **Greedy Modularity** và **Girvan-Newman** đạt độ ổn định tuyệt đối (Std = 0.000) "
         "vì chúng là thuật toán tất định (deterministic). Trong khi đó, **Leiden** và **Louvain** có độ biến thiên nhẹ (NMI > 0.86) "
         "do cơ chế xáo trộn ngẫu nhiên thứ tự duyệt đỉnh ở pha khởi động, song Leiden đạt điểm trung bình cao hơn và hội tụ ổn định hơn."
     )
 
 # 6. Mandatory SNA Knowledge Expander
-with st.expander("💡 Kiến thức SNA: Modularity Q, Thuật toán Leiden vs Louvain & Ma trận NMI/ARI"):
+with st.expander(":material/lightbulb: Kiến thức SNA: Modularity Q, Thuật toán Leiden vs Louvain & Ma trận NMI/ARI"):
     st.markdown("""
     **1. Hàm mục tiêu Modularity $Q$ (Newman-Girvan):**
     $$Q = \\frac{1}{2m} \\sum_{i, j} \\left[ A_{ij} - \\gamma \\frac{k_i k_j}{2m} \\right] \\delta(c_i, c_j)$$

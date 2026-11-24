@@ -160,7 +160,7 @@ with tab_map:
     col_view, col_toggle = st.columns([6, 4])
     with col_view:
         selected_view_name = st.selectbox(
-            "🔭 Tiêu cự Camera theo Vùng Cụm Ven biển:",
+            ":material/center_focus_strong: Tiêu cự Camera theo Vùng Cụm Ven biển:",
             options=list(CLUSTER_VIEWS.keys()),
             index=0,
             key="select_cluster_view",
@@ -170,7 +170,7 @@ with tab_map:
     with col_toggle:
         st.write("")  # Alignment spacing
         enable_seamark = st.checkbox(
-            "⚓ Bật lớp hải đồ & phao tiêu OpenSeaMap (Seamark Layer)",
+            ":material/layers: Bật lớp hải đồ & phao tiêu OpenSeaMap (Seamark Layer)",
             value=False,
             help="Nạp các lớp gạch tile raster phao tiêu, đèn biển, phao luồng từ OpenSeaMap",
         )
@@ -279,7 +279,7 @@ with tab_planner:
 
     with col_orig:
         orig_label = st.selectbox(
-            "🚩 Chọn bến xuất phát (Origin):",
+            ":material/trip_origin: Chọn bến xuất phát (Origin):",
             options=terminal_labels,
             index=default_orig_idx,
             key="select_ferry_origin",
@@ -288,7 +288,7 @@ with tab_planner:
 
     with col_dest:
         dest_label = st.selectbox(
-            "🏁 Chọn bến đến (Destination):",
+            ":material/location_on: Chọn bến đến (Destination):",
             options=terminal_labels,
             index=default_dest_idx,
             key="select_ferry_dest",
@@ -297,7 +297,7 @@ with tab_planner:
 
     with col_crit:
         criterion = st.selectbox(
-            "⚙️ Tiêu chí tối ưu:",
+            ":material/tune: Tiêu chí tối ưu:",
             options=["Nhanh nhất (giờ di chuyển)", "Ngắn nhất (km)", "Ít đổi tàu nhất (chặng)"],
             index=0,
             key="select_ferry_criterion",
@@ -361,11 +361,11 @@ with tab_planner:
             col_m4.metric("Số lần đổi tàu", f"{num_transfers} Lần đổi tàu")
 
             # Itinerary Table
-            st.markdown("##### 🧭 Dòng thời gian Hành trình chi tiết:")
+            st.markdown("##### :material/timeline: Dòng thời gian Hành trình chi tiết:")
             st.dataframe(pd.DataFrame(itinerary_steps), use_container_width=True, hide_index=True)
 
             # Highlighted Map
-            st.markdown("##### 🗺️ Tuyến đường Highlight trên Bản đồ (Màu Vàng Hổ Phách):")
+            st.markdown("##### :material/map: Tuyến đường Highlight trên Bản đồ (Màu Vàng Hổ Phách):")
             hl_layers: List[pdk.Layer] = []
 
             # Background base lines
@@ -498,7 +498,7 @@ with tab_routes:
 # 5. Mandatory "💡 Kiến thức SNA" Expander
 # ---------------------------------------------------------------------------
 
-with st.expander("💡 Kiến thức SNA: Tính Khả Tiếp Cận Đa Phương Thức & Khả Năng Chống Chịu Chuỗi Cung Ứng Hải Đảo"):
+with st.expander(":material/lightbulb: Kiến thức SNA: Tính Khả Tiếp Cận Đa Phương Thức & Khả Năng Chống Chịu Chuỗi Cung Ứng Hải Đảo"):
     st.markdown("""
     **1. Mạng lưới Giao thông Đa phương thức (Multimodal Transportation Feeder Integration):**
     - Khác với mạng lưới tàu container viễn dương vận hành theo các tuyến trục quốc tế (Trunk Lines) có tính dôi dư cao, **Mạng phà nội địa** thuộc Lớp C đóng vai trò là mạng gom hàng và vận tải hành khách nhánh (Feeder Network).

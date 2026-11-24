@@ -340,7 +340,7 @@ col_sel, col_info = st.columns([4, 6])
 with col_sel:
     artifact_names = [item["Tập tin"] for item in artifacts_inv]
     selected_artifact = st.selectbox(
-        "🔍 Chọn Artifact để xem Lược đồ Cột (Schema Columns) & Mẫu dữ liệu:",
+        ":material/search: Chọn Artifact để xem Lược đồ Cột (Schema Columns) & Mẫu dữ liệu:",
         options=artifact_names,
         index=0,
         key="select_artifact_inspector",
@@ -362,7 +362,7 @@ if cols_list:
 if selected_artifact.endswith(".parquet"):
     art_path = get_artifacts_dir() / selected_artifact
     if art_path.exists():
-        with st.expander(f"👁️ Xem trước 3 bản ghi đầu tiên của `{selected_artifact}`"):
+        with st.expander(f":material/preview: Xem trước 3 bản ghi đầu tiên của `{selected_artifact}`"):
             try:
                 sample_df = pd.read_parquet(art_path)
                 st.dataframe(sample_df.head(3), use_container_width=True)
@@ -370,7 +370,7 @@ if selected_artifact.endswith(".parquet"):
                 st.caption(f"Không thể nạp mẫu: {e}")
 
 # Collapsible Raw Manifest JSON
-with st.expander("📄 Xem toàn bộ nội dung siêu dữ liệu `manifest.json`"):
+with st.expander(":material/description: Xem toàn bộ nội dung siêu dữ liệu `manifest.json`"):
     st.json(manifest)
 
 
@@ -384,7 +384,7 @@ st.caption("Tuân thủ chặt chẽ các chuẩn mực học thuật, đạo đ
 col_academic, col_legal = st.columns([5, 5])
 
 with col_academic:
-    st.markdown("#### 📚 Trích dẫn Khoa học Mạng & Thuật toán")
+    st.markdown("#### :material/menu_book: Trích dẫn Khoa học Mạng & Thuật toán")
     st.markdown("""
     1. **M. E. J. Newman (2004, 2006):**
        - *Fast algorithm for detecting community structure in networks.* Phys. Rev. E 69, 066133.
@@ -416,7 +416,7 @@ with col_academic:
     """)
 
 with col_legal:
-    st.markdown("#### ⚖️ Giấy phép Sử dụng & Nguồn Dữ liệu Mở (§16)")
+    st.markdown("#### :material/gavel: Giấy phép Sử dụng & Nguồn Dữ liệu Mở (§16)")
     st.markdown("""
     1. **IMF PortWatch (Quỹ Tiền tệ Quốc tế & UN Global Platform):**
        - *"Dữ liệu cảng và kết nối: IMF PortWatch"*
@@ -444,7 +444,7 @@ with col_legal:
 # 6. "💡 Kiến thức SNA" Expander
 # ---------------------------------------------------------------------------
 
-with st.expander("💡 Kiến thức SNA: Tính Tái Lập (Reproducibility) & Hợp Đồng Dữ Liệu Ngoại Tuyến (Offline Data Contracts)"):
+with st.expander(":material/lightbulb: Kiến thức SNA: Tính Tái Lập (Reproducibility) & Hợp Đồng Dữ Liệu Ngoại Tuyến (Offline Data Contracts)"):
     st.markdown("""
     **1. Kiến trúc Phân tách Hai Pha (Two-Phase Decoupled Architecture):**
     Hệ thống Hải đồ số áp dụng triệt để nguyên lý phân tách giữa **Tính toán Nặng Ngoại tuyến (Heavy Offline Batch Computation)** và **Trực quan hóa Thời gian thực (Real-time Interactive Presentation)**:

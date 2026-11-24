@@ -216,7 +216,7 @@ with tab_scalefree:
     st.plotly_chart(fig_loglog, use_container_width=True)
 
     # Vuong Log-Likelihood Ratio Comparison Cards & Table
-    st.markdown("#### ⚖️ Kiểm định Hợp lý Cực đại Vuong Log-Likelihood Ratio (Model Selection)")
+    st.markdown("#### :material/balance: Kiểm định Hợp lý Cực đại Vuong Log-Likelihood Ratio (Model Selection)")
 
     col_v1, col_v2, col_v3 = st.columns([4, 4, 4])
     with col_v1:
@@ -302,7 +302,7 @@ with tab_richclub:
         st.plotly_chart(fig_rc, use_container_width=True)
 
     with col_rc_desc:
-        st.markdown("#### 💎 Câu lạc bộ Thượng lưu (Rich-Club)")
+        st.markdown("#### :material/diamond: Câu lạc bộ Thượng lưu (Rich-Club)")
         st.markdown(f"""
         - **Quy luật tăng dần:** Khi bậc $k$ tăng từ 5 lên 50, hệ số chuẩn hóa $\\rho_{{\\text{{norm}}}}(k)$ tăng đều từ **1.0008** lên **1.0104**.
         - **Ý nghĩa SNA:** Giá trị $\\rho_{{\\text{{norm}}}}(k) > 1.0$ chứng minh các cảng biển lớn có mật độ liên kết nội bộ dày đặc hơn so với một đồ thị ngẫu nhiên cùng phân phối bậc.
@@ -310,7 +310,7 @@ with tab_richclub:
         """)
 
     # Assortativity & Reciprocity Analysis
-    st.markdown("#### 🔄 Phân tích Tính không đồng loại (Disassortativity) & Tính đối hướng (Reciprocity)")
+    st.markdown("#### :material/sync_alt: Phân tích Tính không đồng loại (Disassortativity) & Tính đối hướng (Reciprocity)")
     col_as1, col_as2 = st.columns(2)
 
     with col_as1:
@@ -429,7 +429,7 @@ with tab_burt:
     st.plotly_chart(fig_burt, use_container_width=True)
 
     # Ranking Table of Strategic Brokers
-    st.markdown("#### 🏆 Xếp hạng Top 5 Cảng Môi giới Chiến lược Việt Nam (Lowest Constraint & High Betweenness)")
+    st.markdown("#### :material/military_tech: Xếp hạng Top 5 Cảng Môi giới Chiến lược Việt Nam (Lowest Constraint & High Betweenness)")
     top_vn_brokers = vn_burt.sort_values(["constraint", "betweenness"], ascending=[True, False]).head(5)
     broker_rows = []
     for rank_idx, (_, r) in enumerate(top_vn_brokers.iterrows()):
@@ -509,7 +509,7 @@ with tab_kcore:
     st.plotly_chart(fig_kcore, use_container_width=True)
 
     # Spotlight on exactly 5 Vietnamese Ports in Maximum Core Nucleus (k=120)
-    st.markdown("#### 🌟 Vinh danh 5 Cảng biển Việt Nam trong Lõi Cực đại Toàn cầu ($k = 120$)")
+    st.markdown("#### :material/star: Vinh danh 5 Cảng biển Việt Nam trong Lõi Cực đại Toàn cầu ($k = 120$)")
     st.caption("Trong toàn bộ 2,424 cảng biển thế giới, chỉ có 435 cảng lọt vào nhân lõi siêu bền vững $k=120$, trong đó Việt Nam tự hào sở hữu đúng 5 đại diện:")
 
     vn_k120 = nodes_copy[(nodes_copy["is_vn"] == True) & (nodes_copy["core_number"] == 120)].sort_values("degree", ascending=False)
@@ -530,7 +530,7 @@ with tab_kcore:
 # 5. Mandatory "💡 Kiến thức SNA" Expander
 # ---------------------------------------------------------------------------
 
-with st.expander("💡 Kiến thức SNA: Cấu trúc Thế Giới Nhỏ, Mạng Không Quy Mô, Rich-Club & Lỗ Hổng Cấu Trúc"):
+with st.expander(":material/lightbulb: Kiến thức SNA: Cấu trúc Thế Giới Nhỏ, Mạng Không Quy Mô, Rich-Club & Lỗ Hổng Cấu Trúc"):
     st.markdown("""
     **1. Hiện tượng Thế giới nhỏ (Watts-Strogatz Small-World 1998):**
     - Mạng lưới hàng hải toàn cầu thỏa mãn định nghĩa thế giới nhỏ khi hệ số phân cụm lớn hơn mạng ngẫu nhiên rất nhiều ($C \\gg C_{\\text{rand}}$) trong khi khoảng cách trung bình vẫn tương đương ngắn ($L \\approx L_{\\text{rand}}$):

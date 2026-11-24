@@ -128,7 +128,7 @@ PRESET_SCENARIOS = {
 }
 
 # 4. Scenario Control Panel
-st.markdown("#### ⚙️ Thiết lập kịch bản mô phỏng sự cố")
+st.markdown("#### :material/tune: Thiết lập kịch bản mô phỏng sự cố")
 col_mode, col_param = st.columns([4, 6])
 
 with col_mode:
@@ -151,7 +151,7 @@ if sim_mode == "Kịch bản sự cố thực tế (Preset)":
         scenario_info = PRESET_SCENARIOS[preset_choice]
         severed_ids = scenario_info["nodes"]
         active_scenario_title = preset_choice.split(". ")[-1]
-        st.info(f"📍 **Mô tả kịch bản:** {scenario_info['desc']}")
+        st.info(f":material/info: **Mô tả kịch bản:** {scenario_info['desc']}")
 
 elif sim_mode == "Tấn công theo Chiến lược SNA lý thuyết":
     with col_param:
@@ -278,7 +278,7 @@ tab_map, tab_curves, tab_vn, tab_spillover = st.tabs([
 # TAB 1: DUAL-MAP SIDE-BY-SIDE CONNECTIVITY COMPARISON
 # ---------------------------------------------------------------------------
 with tab_map:
-    st.markdown("##### 🔍 Đối chiếu Trực quan Kết nối Mạng lưới (Dual-Map ECDIS)")
+    st.markdown("##### :material/compare: Đối chiếu Trực quan Kết nối Mạng lưới (Dual-Map ECDIS)")
 
     col_left, col_right = st.columns(2)
 
@@ -287,7 +287,7 @@ with tab_map:
     intact_edges = edges_df[~edges_df["source"].isin(severed_set) & ~edges_df["target"].isin(severed_set)].copy()
 
     with col_left:
-        st.markdown("**🟢 Trạng thái Bình thường (Normal Baseline)**")
+        st.markdown("**:material/check_circle: Trạng thái Bình thường (Normal Baseline)**")
         st.caption("2,424 cảng biển và 169,888 tuyến hàng hải lưu thông tự do")
         deck_left_layers = [
             ports_layer(nodes_df, metric_col="pagerank", color_by="metric"),
@@ -299,7 +299,7 @@ with tab_map:
         st.pydeck_chart(deck_left, use_container_width=True)
 
     with col_right:
-        st.markdown(f"**🔴 Trạng thái Sau sự cố ({active_scenario_title})**")
+        st.markdown(f"**:material/error: Trạng thái Sau sự cố ({active_scenario_title})**")
         st.caption(f"Đánh dấu **{len(severed_df)} nút phong tỏa** (đỏ alert) & các tuyến bị cắt đứt")
 
         # Severed arcs layer in alert red
@@ -342,7 +342,7 @@ with tab_map:
 # TAB 2: REAL-TIME DEGRADATION CURVES (PERCOLATION)
 # ---------------------------------------------------------------------------
 with tab_curves:
-    st.markdown("##### 📉 Đường cong suy giảm độ bền vững mạng lưới (Percolation Degradation)")
+    st.markdown("##### :material/trending_down: Đường cong suy giảm độ bền vững mạng lưới (Percolation Degradation)")
 
     curve_metric = st.radio(
         "Chỉ số theo dõi trên trục Y:",
@@ -429,7 +429,7 @@ with tab_vn:
     with col_kpi3:
         st.metric("Gia tăng thời gian hải trình Á - Âu", f"+{vn_delay_surge:.1f}%")
 
-    st.markdown("###### 📍 Top 5 Tuyến hàng hải chạm Việt Nam chịu ảnh hưởng nặng nhất:")
+    st.markdown("###### :material/priority_high: Top 5 Tuyến hàng hải chạm Việt Nam chịu ảnh hưởng nặng nhất:")
     if len(vn_severed_edges) > 0:
         vn_table = vn_severed_edges.head(5).copy()
         vn_table["Cảng xuất phát"] = vn_table["source"].map(lambda x: nodes_df.loc[nodes_df["node_id"] == str(x), "name"].values[0] if str(x) in nodes_df["node_id"].values else x)
@@ -437,7 +437,7 @@ with tab_vn:
         vn_table["Trọng số lưu lượng"] = vn_table["weight"].round(3)
         vn_table["Hải trình chuẩn (ngày)"] = vn_table["transit_days"].round(1)
         vn_table["Khoảng cách (km)"] = vn_table["distance_km"].round(0)
-        vn_table["Trạng thái"] = "❌ Đứt gãy hoàn toàn (Phong tỏa)"
+        vn_table["Trạng thái"] = ":material/cancel: Đứt gãy hoàn toàn (Phong tỏa)"
 
         st.dataframe(
             vn_table[["Cảng xuất phát", "Cảng đích", "Trọng số lưu lượng", "Hải trình chuẩn (ngày)", "Khoảng cách (km)", "Trạng thái"]],
@@ -445,18 +445,18 @@ with tab_vn:
             hide_index=True,
         )
     else:
-        st.success("✅ Không có tuyến hàng hải nào nối trực tiếp từ Việt Nam tới các cảng bị gỡ trong kịch bản này. Tác động chủ yếu mang tính lan truyền gián tiếp.")
+        st.success(":material/check_circle: Không có tuyến hàng hải nào nối trực tiếp từ Việt Nam tới các cảng bị gỡ trong kịch bản này. Tác động chủ yếu mang tính lan truyền gián tiếp.")
 
-    st.markdown("###### 🛡️ Khuyến nghị Rerouting Chiến lược cho Việt Nam:")
+    st.markdown("###### :material/shield: Khuyến nghị Rerouting Chiến lược cho Việt Nam:")
     if is_malacca:
         st.warning(
-            "⚠️ **Khi Eo Malacca bị phong tỏa:** Tàu container từ Cái Mép và Hải Phòng đi Châu Âu/Trung Đông "
+            ":material/warning: **Khi Eo Malacca bị phong tỏa:** Tàu container từ Cái Mép và Hải Phòng đi Châu Âu/Trung Đông "
             "buộc phải chuyển hướng vòng xuống phía Nam qua **Eo Sunda (Indonesia)**. Quãng đường tăng thêm ~1.850 km, "
             "thời gian hành trình tăng trung bình +3.5 đến +5 ngày, làm đội chi phí nhiên liệu và phụ phí rủi ro hàng hải."
         )
     if is_suez:
         st.warning(
-            "⚠️ **Khi Kênh Suez / Biển Đỏ bị nghẽn:** Hải trình Á - Âu từ Việt Nam chuyển hướng hoàn toàn "
+            ":material/warning: **Khi Kênh Suez / Biển Đỏ bị nghẽn:** Hải trình Á - Âu từ Việt Nam chuyển hướng hoàn toàn "
             "vòng qua **Mũi Hảo Vọng (Nam Phi)**, kéo dài thêm 10-14 ngày hành trình mỗi chiều, đẩy cước vận tải container tăng vọt."
         )
 
@@ -464,7 +464,7 @@ with tab_vn:
 # TAB 4: EMPIRICAL SPILLOVER DYNAMICS
 # ---------------------------------------------------------------------------
 with tab_spillover:
-    st.markdown("##### 🌊 Mô phỏng Lan truyền Ảnh hưởng Gián đoạn (PortWatch Spillover Dynamics)")
+    st.markdown("##### :material/tsunami: Mô phỏng Lan truyền Ảnh hưởng Gián đoạn (PortWatch Spillover Dynamics)")
     st.caption("Dựa trên ma trận lan truyền động học thực nghiệm đa thời kỳ của IMF PortWatch")
 
     spill_col1, spill_col2 = st.columns([5, 5])
@@ -592,7 +592,7 @@ with tab_spillover:
         st.info("Chưa có dữ liệu ma trận lan truyền cho cảng nguồn đã chọn.")
 
 # 8. Mandatory SNA Knowledge Expander
-with st.expander("💡 Kiến thức SNA: Lý thuyết Thấm qua (Percolation), Độ bền vững LCC & Lan truyền Gián đoạn"):
+with st.expander(":material/lightbulb: Kiến thức SNA: Lý thuyết Thấm qua (Percolation), Độ bền vững LCC & Lan truyền Gián đoạn"):
     st.markdown("""
     **1. Lý thuyết Thấm qua (Percolation Theory) & Ngưỡng sụp đổ tới hạn $f_c$:**
     Khảo sát tính kết nối của đồ thị khi các đỉnh (cảng) hoặc cạnh (tuyến biển) lần lượt bị loại bỏ.
