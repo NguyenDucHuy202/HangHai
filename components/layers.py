@@ -408,15 +408,15 @@ def chokepoints_layer() -> List[pdk.Layer]:
         data=choke_df,
         get_position=["lon", "lat"],
         get_text="name",
-        get_color=[15, 23, 42, 255],
+        get_color=[255, 255, 255, 255],
         get_size=13,
         get_alignment_baseline="'bottom'",
         get_pixel_offset=[0, -14],
-        character_set=VIETNAMESE_DECK_CHARSET,
-        font_family="'Arial', 'Segoe UI', sans-serif",
+        character_set="'auto'",
+        font_family="'Arial'",
         billboard=True,
-        background_color=[255, 255, 255, 230],
-        background_padding=[5, 3],
+        background_color=[15, 23, 42, 230],
+        background_padding=[6, 4],
         pickable=False,
     )
 
@@ -691,12 +691,12 @@ def vietnam_sovereignty_layers() -> List[pdk.Layer]:
         pickable=True,
     )
 
-    # 3. Main Text Labels (High Visibility with background box)
+    # 3. Main Text Labels (High Visibility with dark slate badge)
     islands_labels_data = pd.DataFrame([
-        {"text": "★ QUẦN ĐẢO HOÀNG SA (VIỆT NAM)", "lon": 112.00, "lat": 16.50, "size": 16, "color": [220, 38, 38, 255]},
-        {"text": "★ QUẦN ĐẢO TRƯỜNG SA (VIỆT NAM)", "lon": 114.20, "lat": 9.90, "size": 16, "color": [220, 38, 38, 255]},
-        {"text": "Đảo Phú Quốc (Việt Nam)", "lon": 103.96, "lat": 10.25, "size": 13, "color": [220, 38, 38, 255]},
-        {"text": "Côn Đảo (Việt Nam)", "lon": 106.60, "lat": 8.68, "size": 13, "color": [220, 38, 38, 255]},
+        {"text": "★ QUẦN ĐẢO HOÀNG SA (VIỆT NAM)", "lon": 112.00, "lat": 16.50, "size": 15, "color": [254, 240, 138, 255]},
+        {"text": "★ QUẦN ĐẢO TRƯỜNG SA (VIỆT NAM)", "lon": 114.20, "lat": 9.90, "size": 15, "color": [254, 240, 138, 255]},
+        {"text": "Đảo Phú Quốc (Việt Nam)", "lon": 103.96, "lat": 10.25, "size": 13, "color": [255, 255, 255, 255]},
+        {"text": "Côn Đảo (Việt Nam)", "lon": 106.60, "lat": 8.68, "size": 13, "color": [255, 255, 255, 255]},
     ])
     islands_text_layer = pdk.Layer(
         "TextLayer",
@@ -709,16 +709,15 @@ def vietnam_sovereignty_layers() -> List[pdk.Layer]:
         get_alignment_baseline="'center'",
         get_text_anchor="'middle'",
         get_pixel_offset=[0, -18],
-        character_set=VIETNAMESE_DECK_CHARSET,
-        font_family="'Arial', 'Segoe UI', sans-serif",
+        character_set="'auto'",
+        font_family="'Arial'",
         billboard=True,
-        background_color=[255, 255, 255, 245],
+        background_color=[15, 23, 42, 230],
         background_padding=[8, 5],
         pickable=False,
     )
 
     # 4. Sea Water Text Label (BIỂN ĐÔNG VIỆT NAM)
-    # High-contrast solid Navy Badge with bright White & Gold lettering for sharp legibility on satellite ocean
     sea_label_data = pd.DataFrame([
         {"text": "★ BIỂN ĐÔNG (VIỆT NAM)", "lon": 113.20, "lat": 14.00, "size": 22, "color": [255, 255, 255, 255]},
     ])
@@ -733,8 +732,8 @@ def vietnam_sovereignty_layers() -> List[pdk.Layer]:
         get_alignment_baseline="'center'",
         get_text_anchor="'middle'",
         get_pixel_offset=[0, -12],
-        character_set=VIETNAMESE_DECK_CHARSET,
-        font_family="'Arial', 'Segoe UI', sans-serif",
+        character_set="'auto'",
+        font_family="'Arial'",
         billboard=True,
         background_color=[15, 23, 42, 240],
         background_padding=[12, 7],
@@ -743,9 +742,9 @@ def vietnam_sovereignty_layers() -> List[pdk.Layer]:
 
     # 5. Administrative Sub-labels
     sub_labels_data = pd.DataFrame([
-        {"text": "Thuộc TP. Đà Nẵng, Việt Nam", "lon": 112.00, "lat": 16.50, "size": 12, "color": [15, 23, 42, 255], "bg": [255, 255, 255, 245], "offset": [0, 16]},
-        {"text": "Thuộc Tỉnh Khánh Hòa, Việt Nam", "lon": 114.20, "lat": 9.90, "size": 12, "color": [15, 23, 42, 255], "bg": [255, 255, 255, 245], "offset": [0, 16]},
-        {"text": "Vùng biển chủ quyền & quyền tài phán quốc gia", "lon": 113.20, "lat": 14.00, "size": 13, "color": [250, 204, 21, 255], "bg": [15, 23, 42, 240], "offset": [0, 18]},
+        {"text": "Thuộc TP. Đà Nẵng, Việt Nam", "lon": 112.00, "lat": 16.50, "size": 11, "color": [226, 232, 240, 255]},
+        {"text": "Thuộc Tỉnh Khánh Hòa, Việt Nam", "lon": 114.20, "lat": 9.90, "size": 11, "color": [226, 232, 240, 255]},
+        {"text": "Vùng biển chủ quyền & quyền tài phán quốc gia", "lon": 113.20, "lat": 14.00, "size": 12, "color": [250, 204, 21, 255]},
     ])
     sub_text_layer = pdk.Layer(
         "TextLayer",
@@ -757,11 +756,11 @@ def vietnam_sovereignty_layers() -> List[pdk.Layer]:
         get_size="size",
         get_alignment_baseline="'top'",
         get_text_anchor="'middle'",
-        get_pixel_offset="offset",
-        character_set=VIETNAMESE_DECK_CHARSET,
-        font_family="'Arial', 'Segoe UI', sans-serif",
+        get_pixel_offset=[0, 14],
+        character_set="'auto'",
+        font_family="'Arial'",
         billboard=True,
-        background_color="bg",
+        background_color=[15, 23, 42, 220],
         background_padding=[8, 4],
         pickable=False,
     )

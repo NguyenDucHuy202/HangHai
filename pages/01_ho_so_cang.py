@@ -391,10 +391,15 @@ ego_layers.append(pdk.Layer(
     data=center_df,
     get_position=["lon", "lat"],
     get_text="name",
-    get_color=[3, 4, 94, 255],
+    get_color=[255, 255, 255, 255],
     get_size=14,
     get_alignment_baseline="'bottom'",
     get_pixel_offset=[0, -15],
+    character_set="'auto'",
+    font_family="'Arial'",
+    billboard=True,
+    background_color=[15, 23, 42, 230],
+    background_padding=[6, 4],
     pickable=False,
 ))
 
