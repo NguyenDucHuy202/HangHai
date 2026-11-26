@@ -210,19 +210,15 @@
 
   <div id="map"></div>
 
-  <div style="position: absolute; top: 16px; left: 16px; z-index: 999; background: rgba(255, 255, 255, 0.95); border: 1px solid #FCA5A5; border-left: 4px solid #DA251D; border-radius: 8px; padding: 6px 14px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08); font-size: 12px; font-weight: 600; color: #0F172A; pointer-events: none;">
-    🇻🇳 <span style="color: #DA251D; font-weight: 700;">Chủ quyền Biển Đảo:</span> Quần đảo Hoàng Sa & Trường Sa là của Việt Nam · Biển Đông (Việt Nam)
-  </div>
-
   <div class="stats-badge">
-    🚢 Đang mô phỏng: <b id="active-vessels-count">400</b> hải trình tàu
+    Đang mô phỏng: <b id="active-vessels-count">400</b> hải trình tàu (60 FPS WebGL)
   </div>
 
   <div class="controls-panel">
     <div class="controls-row-top">
       <button id="btn-toggle" class="btn-play" title="Phát / Tạm dừng">⏸</button>
       <div class="slider-container">
-        <input type="range" id="time-slider" min="0" max="101.0" step="0.1" value="0">
+        <input type="range" id="time-slider" min="0" max="102.0" step="0.1" value="0">
       </div>
       <div id="sim-clock" class="clock-display">2026-07-01 00:00 UTC</div>
     </div>
@@ -257,7 +253,7 @@
 
     // Simulation configuration
     const MIN_TIME = 0.0;
-    const MAX_TIME = 101.0;
+    const MAX_TIME = 102.0;
     const TRAIL_LENGTH = 8.0;
     const BASE_TIMESTAMP_MS = Date.UTC(2026, 6, 1, 0, 0, 0); // 2026-07-01 00:00:00 UTC
 
@@ -270,7 +266,7 @@
     const btnToggle = document.getElementById('btn-toggle');
     const timeSlider = document.getElementById('time-slider');
     const simClock = document.getElementById('sim-clock');
-    const speedButtons = document.querySelectorAll('.btn-speed');
+    const speedButtons = document.querySelectorAll('.btn-speed[data-speed]');
     const activeCountEl = document.getElementById('active-vessels-count');
 
     if (rawTripsData && rawTripsData.length) {
@@ -323,7 +319,23 @@
         pitch: 0,
         bearing: 0
       },
-      controller: true
+      controller: true,
+      getTooltip: ({ object }) => {
+        if (!object) return null;
+        if (object.vessel_id) {
+          return {
+            html: `<div style="font-family:'Be Vietnam Pro',sans-serif;font-size:12px;">
+              <div style="font-weight:700;color:#0077B6;">${object.name || object.vessel_id}</div>
+              <div style="color:#475569;font-size:11px;">Loại tàu: ${object.type || 'Hàng hải'}</div>
+            </div>`,
+            style: { backgroundColor: '#FFFFFF', color: '#0F172A', borderRadius: '8px', padding: '6px 10px', border: '1px solid #E2E8F0' }
+          };
+        }
+        if (object.name) {
+          return { text: `${object.name} (Việt Nam)` };
+        }
+        return null;
+      }
     });
 
     // Authoritative Vietnamese Sovereignty Points & Labels
@@ -342,14 +354,46 @@
     ];
 
     const sovereigntyLabels = [
-      { coordinates: [112.0, 16.5], text: "★ QUẦN ĐẢO HOÀNG SA (VIỆT NAM)", color: [218, 37, 29, 255], size: 13, offset: [0, -15] },
-      { coordinates: [112.0, 16.5], text: "Thuộc TP. Đà Nẵng", color: [71, 85, 105, 255], size: 10, offset: [0, 12] },
-      { coordinates: [114.2, 9.9], text: "★ QUẦN ĐẢO TRƯỜNG SA (VIỆT NAM)", color: [218, 37, 29, 255], size: 13, offset: [0, -15] },
-      { coordinates: [114.2, 9.9], text: "Thuộc Tỉnh Khánh Hòa", color: [71, 85, 105, 255], size: 10, offset: [0, 12] },
-      { coordinates: [113.2, 14.0], text: "BIỂN ĐÔNG (VIỆT NAM)", color: [2, 132, 199, 255], size: 18, offset: [0, 0] },
-      { coordinates: [103.96, 10.25], text: "Đảo Phú Quốc (VN)", color: [218, 37, 29, 240], size: 11, offset: [0, -12] },
-      { coordinates: [106.60, 8.68], text: "Côn Đảo (VN)", color: [218, 37, 29, 240], size: 11, offset: [0, -12] }
+      { coordinates: [112.0, 16.5], text: "★ QUẦN ĐẢO HOÀNG SA (VIỆT NAM)", color: [254, 240, 138, 255], size: 13, offset: [0, -16] },
+      { coordinates: [112.0, 16.5], text: "Thuộc TP. Đà Nẵng", color: [226, 232, 240, 255], size: 10, offset: [0, 12] },
+      { coordinates: [114.2, 9.9], text: "★ QUẦN ĐẢO TRƯỜNG SA (VIỆT NAM)", color: [254, 240, 138, 255], size: 13, offset: [0, -16] },
+      { coordinates: [114.2, 9.9], text: "Thuộc Tỉnh Khánh Hòa", color: [226, 232, 240, 255], size: 10, offset: [0, 12] },
+      { coordinates: [113.2, 14.0], text: "★ BIỂN ĐÔNG (VIỆT NAM)", color: [255, 255, 255, 255], size: 18, offset: [0, 0] },
+      { coordinates: [103.96, 10.25], text: "Đảo Phú Quốc (VN)", color: [255, 255, 255, 255], size: 11, offset: [0, -14] },
+      { coordinates: [106.60, 8.68], text: "Côn Đảo (VN)", color: [255, 255, 255, 255], size: 11, offset: [0, -14] }
     ];
+
+    const sovPointsLayer = new deck.ScatterplotLayer({
+      id: 'vn-sov-points',
+      data: sovereigntyPoints,
+      getPosition: d => d.coordinates,
+      getRadius: d => d.radius,
+      getFillColor: [255, 215, 0, 255],
+      getLineColor: [218, 37, 29, 255],
+      stroked: true,
+      filled: true,
+      lineWidthMinPixels: 2.5,
+      radiusMinPixels: 4,
+      pickable: true
+    });
+
+    const sovTextLayer = new deck.TextLayer({
+      id: 'vn-sov-labels',
+      data: sovereigntyLabels,
+      getPosition: d => d.coordinates,
+      getText: d => d.text,
+      getColor: d => d.color,
+      getSize: d => d.size,
+      getPixelOffset: d => d.offset,
+      getTextAnchor: 'middle',
+      getAlignmentBaseline: 'center',
+      characterSet: 'auto',
+      fontFamily: 'Arial',
+      billboard: true,
+      backgroundColor: [15, 23, 42, 230],
+      backgroundPadding: [6, 4],
+      fontWeight: 700
+    });
 
     function getTripsLayer(time) {
       return new deck.TripsLayer({
@@ -362,43 +406,12 @@
         widthMinPixels: 2.5,
         rounded: true,
         trailLength: TRAIL_LENGTH,
-        currentTime: time
+        currentTime: time,
+        pickable: true
       });
     }
 
     function renderLayers() {
-      const sovPointsLayer = new deck.ScatterplotLayer({
-        id: 'vn-sov-points',
-        data: sovereigntyPoints,
-        getPosition: d => d.coordinates,
-        getRadius: d => d.radius,
-        getFillColor: [255, 215, 0, 255],
-        getLineColor: [218, 37, 29, 255],
-        stroked: true,
-        filled: true,
-        lineWidthMinPixels: 2.5,
-        radiusMinPixels: 4,
-        pickable: true
-      });
-
-      const sovTextLayer = new deck.TextLayer({
-        id: 'vn-sov-labels',
-        data: sovereigntyLabels,
-        getPosition: d => d.coordinates,
-        getText: d => d.text,
-        getColor: d => d.color,
-        getSize: d => d.size,
-        getPixelOffset: d => d.offset,
-        getTextAnchor: 'middle',
-        getAlignmentBaseline: 'center',
-        characterSet: 'auto',
-        fontFamily: "'Be Vietnam Pro', 'Segoe UI', 'Arial', sans-serif",
-        billboard: true,
-        backgroundColor: [255, 255, 255, 220],
-        backgroundPadding: [4, 2],
-        fontWeight: 700
-      });
-
       deckOverlay.setProps({
         layers: [
           getTripsLayer(currentTime),
