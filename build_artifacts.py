@@ -608,14 +608,27 @@ def main() -> None:
             else:
                 leg_coords = safe_searoute(pt_s, pt_t)["path"]
 
-            # Downsample to 3-5 points per leg
-            step = max(1, len(leg_coords) // 4)
-            sampled = leg_coords[::step]
-            if leg_coords[-1] not in sampled:
-                sampled.append(leg_coords[-1])
+            # Keep full searoute ocean curvature (avoid cutting across land)
+            # Only downsample ultra-dense paths (>60 pts) gently
+            if len(leg_coords) > 60:
+                step = max(1, len(leg_coords) // 40)
+                sampled = leg_coords[::step]
+                if leg_coords[-1] not in sampled:
+                    sampled.append(leg_coords[-1])
+            else:
+                sampled = list(leg_coords)
 
-            if combined_path and sampled and combined_path[-1] == sampled[0]:
-                sampled = sampled[1:]
+            if combined_path and sampled:
+                prev_pt = combined_path[-1]
+                next_pt = sampled[0]
+                if abs(next_pt[0] - prev_pt[0]) > 180:
+                    continue
+                if abs(next_pt[0] - prev_pt[0]) > 2.5 or abs(next_pt[1] - prev_pt[1]) > 2.5:
+                    bridge = safe_searoute(prev_pt, next_pt)["path"]
+                    if bridge and len(bridge) >= 2:
+                        combined_path.extend(bridge[1:])
+                if combined_path[-1] == sampled[0]:
+                    sampled = sampled[1:]
             combined_path.extend(sampled)
 
         if len(combined_path) >= 2:
