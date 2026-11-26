@@ -567,6 +567,100 @@ with col_ts:
         else:
             st.info("Chưa có dữ liệu đối tác cho cảng này.")
 
+# 6b. Port-to-Port Comparison (So sánh đối đầu 2 cảng)
+st.markdown("---")
+st.subheader(":material/compare_arrows: So sánh Đối đầu 2 Cảng (Port-to-Port Comparison)")
+st.caption("Đặt cạnh nhau các độ đo SNA, đối tác trung chuyển chung và biểu đồ Radar giữa cảng đang xem và cảng đối chứng.")
+
+top_global_id = str(nodes_df.sort_values("pagerank", ascending=False).iloc[0]["node_id"])
+alt_global_id = str(nodes_df.sort_values("pagerank", ascending=False).iloc[1]["node_id"])
+default_comp_id = top_global_id if top_global_id != selected_port_id else alt_global_id
+comp_idx = port_options.index(default_comp_id) if default_comp_id in port_options else 0
+
+compare_port_id = st.selectbox(
+    "Chọn Cảng đối chứng (Cảng B) để so sánh với cảng đang xem:",
+    options=port_options,
+    index=comp_idx,
+    format_func=lambda x: port_labels.get(x, x),
+    key="compare_port_select",
+)
+
+comp_data = get_port_by_id(compare_port_id)
+if comp_data:
+    c_cmp1, c_cmp2 = st.columns([5, 5])
+    with c_cmp1:
+        comp_metrics = [
+            ("PageRank", f"{float(port_data.get('pagerank', 0)):.5f}", f"{float(comp_data.get('pagerank', 0)):.5f}"),
+            ("Betweenness", f"{float(port_data.get('betweenness', 0)):.5f}", f"{float(comp_data.get('betweenness', 0)):.5f}"),
+            ("Closeness", f"{float(port_data.get('closeness_time', 0)):.4f}", f"{float(comp_data.get('closeness_time', 0)):.4f}"),
+            ("Degree (Tổng bậc)", f"{int(port_data.get('degree', 0)):,}", f"{int(comp_data.get('degree', 0)):,}"),
+            ("k-Core", f"{int(port_data.get('core_number', 0))}", f"{int(comp_data.get('core_number', 0))}"),
+            ("Cộng đồng Leiden", f"Cụm #{int(port_data.get('comm_leiden', -1))}", f"Cụm #{int(comp_data.get('comm_leiden', -1))}"),
+        ]
+        comp_table = pd.DataFrame(
+            comp_metrics,
+            columns=["Chỉ số SNA", f"Cảng A: {port_data.get('name', selected_port_id)}", f"Cảng B: {comp_data.get('name', compare_port_id)}"],
+        )
+        st.dataframe(comp_table, use_container_width=True, hide_index=True)
+
+        # Common neighbors & direct connection check
+        u_graph = get_undirected_graph()
+        nbrs_a = set(u_graph.neighbors(selected_port_id)) if selected_port_id in u_graph else set()
+        nbrs_b = set(u_graph.neighbors(compare_port_id)) if compare_port_id in u_graph else set()
+        common_nbrs = nbrs_a & nbrs_b
+        union_nbrs = nbrs_a | nbrs_b
+        jacc = len(common_nbrs) / len(union_nbrs) if union_nbrs else 0.0
+        direct_connected = u_graph.has_edge(selected_port_id, compare_port_id) if (selected_port_id in u_graph and compare_port_id in u_graph) else False
+
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Đối tác chung", f"{len(common_nbrs):,} cảng")
+        m2.metric("Tương đồng Jaccard", f"{jacc:.3f}")
+        m3.metric("Kết nối trực tiếp", "Có tuyến thẳng" if direct_connected else "Qua trung chuyển")
+
+        st.download_button(
+            label=":material/download: Tải bảng So sánh (CSV)",
+            data=comp_table.to_csv(index=False).encode("utf-8-sig"),
+            file_name=f"so_sanh_{selected_port_id}_vs_{compare_port_id}.csv",
+            mime="text/csv",
+        )
+
+    with c_cmp2:
+        radar_cols = ["pagerank", "betweenness", "closeness_time", "degree", "core_number"]
+        radar_labels = ["PageRank", "Betweenness", "Closeness", "Degree", "k-Core"]
+        vals_a, vals_b = [], []
+        for col in radar_cols:
+            max_v = pd.to_numeric(nodes_df[col], errors="coerce").max() if col in nodes_df.columns else 1.0
+            max_v = float(max_v) if max_v and max_v > 0 else 1.0
+            vals_a.append(min(1.0, float(port_data.get(col, 0) or 0) / max_v))
+            vals_b.append(min(1.0, float(comp_data.get(col, 0) or 0) / max_v))
+
+        fig_cmp = go.Figure()
+        fig_cmp.add_trace(go.Scatterpolar(
+            r=vals_a + [vals_a[0]],
+            theta=radar_labels + [radar_labels[0]],
+            fill="toself",
+            name=str(port_data.get("name", selected_port_id)),
+            line_color="#0077B6",
+            fillcolor="rgba(0, 119, 182, 0.22)",
+        ))
+        fig_cmp.add_trace(go.Scatterpolar(
+            r=vals_b + [vals_b[0]],
+            theta=radar_labels + [radar_labels[0]],
+            fill="toself",
+            name=str(comp_data.get("name", compare_port_id)),
+            line_color="#DA251D",
+            fillcolor="rgba(218, 37, 29, 0.16)",
+        ))
+        fig_cmp.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, 1], gridcolor="#E2E8F0")),
+            paper_bgcolor="#FFFFFF",
+            font=dict(family="Be Vietnam Pro, sans-serif", color="#0F172A"),
+            legend=dict(orientation="h", yanchor="bottom", y=1.05, xanchor="center", x=0.5),
+            margin=dict(l=40, r=40, t=40, b=20),
+            height=340,
+        )
+        st.plotly_chart(fig_cmp, use_container_width=True)
+
 # 7. Mandatory SNA Knowledge Expander
 with st.expander(":material/lightbulb: Kiến thức SNA: Lỗ hổng Cấu trúc (Structural Holes) & Chỉ số Ràng buộc Burt"):
     st.markdown("""

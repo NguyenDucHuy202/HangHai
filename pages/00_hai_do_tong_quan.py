@@ -135,7 +135,7 @@ with st.sidebar:
         "Số lượng tuyến hiển thị (Arcs):",
         min_value=500,
         max_value=20000,
-        value=1500,
+        value=1000,
         step=500,
         help="Số tuyến có trọng số cao nhất được dựng trên bản đồ cầu lớn (Great-Circle)",
     )
@@ -325,6 +325,14 @@ with tab_map:
         if st.button(":material/open_in_new: Mở Hồ sơ cảng biển", type="primary", use_container_width=True):
             st.query_params["port"] = chosen_port_id
             st.switch_page("pages/01_ho_so_cang.py")
+        csv_top20 = display_df.to_csv(index=False).encode("utf-8-sig")
+        st.download_button(
+            label=":material/download: Tải bảng Top 20 (CSV)",
+            data=csv_top20,
+            file_name="top20_cang_bien_toan_cau.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
 
 with tab_trips:
     st.markdown("#### :material/directions_boat: Hoạt ảnh Luồng tàu Di chuyển qua WebGL TripsLayer")

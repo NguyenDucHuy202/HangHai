@@ -341,6 +341,57 @@ with tab_recommend:
     )
     st.pydeck_chart(deck_map, use_container_width=True)
 
+    # Export CSV button + What-If Network Impact Simulator
+    col_dl, _ = st.columns([3, 7])
+    with col_dl:
+        st.download_button(
+            label=":material/download: Tải Top tuyến gợi ý (CSV)",
+            data=cand_df.to_csv(index=False).encode("utf-8-sig"),
+            file_name=f"du_doan_tuyen_moi_{selected_vn_id}.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
+
+    if len(cand_df) > 0:
+        st.markdown("---")
+        st.subheader("3. Mô phỏng What-If: Tác động khi Mở tuyến Hàng hải Mới")
+        st.caption("Chọn một tuyến AI gợi ý để mô phỏng mức cải thiện độ đo kết nối của cảng Việt Nam nếu mở tuyến trực tiếp:")
+
+        sim_options = cand_df.apply(
+            lambda r: f"#{int(r['rank'])} {selected_vn_name} → {r['candidate_name']} ({r['candidate_country']}) — Điểm {float(r['score']):.4f}",
+            axis=1,
+        ).tolist()
+        sim_choice_idx = st.selectbox(
+            "Chọn tuyến giả lập mở mới:",
+            options=range(len(sim_options)),
+            format_func=lambda i: sim_options[i],
+            key="what_if_route_select",
+        )
+        sim_row = cand_df.iloc[sim_choice_idx]
+        cand_id = str(sim_row["candidate_node_id"])
+        dist_km = float(sim_row.get("dist_km", 0.0) or 0.0)
+
+        curr_deg = int(U.degree(selected_vn_id)) if selected_vn_id in U else 0
+        cand_deg = int(U.degree(cand_id)) if cand_id in U else 1
+        src_pr = float(node_lookup.get(selected_vn_id, {}).get("pagerank", 0.0) or 0.0)
+        cand_pr = float(node_lookup.get(cand_id, {}).get("pagerank", 0.0) or 0.0)
+
+        import networkx as nx
+        try:
+            curr_hops = nx.shortest_path_length(U, selected_vn_id, cand_id)
+        except Exception:
+            curr_hops = 2
+
+        est_days = dist_km / (18.5 * 1.852 * 24.0) if dist_km > 0 else 0.0
+        est_pr_gain = 0.85 * (cand_pr / max(1, cand_deg))
+        deg_pct = (1.0 / max(1, curr_deg)) * 100.0
+
+        w1, w2, w3, w4 = st.columns(4)
+        w1.metric("Số chặng (Hops)", "1 chặng thẳng", delta=f"-{max(0, curr_hops - 1)} trạm trung chuyển")
+        w2.metric("Bậc kết nối (Degree)", f"{curr_deg + 1:,}", delta=f"+1 tuyến (+{deg_pct:.2f}%)")
+        w3.metric("Ước tính PageRank mới", f"{src_pr + est_pr_gain:.5f}", delta=f"+{est_pr_gain:.6f}")
+        w4.metric("Hải trình dự kiến (18.5 kn)", f"{est_days:.1f} ngày", delta=f"{dist_km:,.0f} km")
+
 # ---------------------------------------------------------------------------
 # TAB 2: Đối chuẩn 6 Thuật toán & Đường cong ROC / PR
 # ---------------------------------------------------------------------------
