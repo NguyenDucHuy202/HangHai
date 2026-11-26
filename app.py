@@ -46,15 +46,6 @@ with st.sidebar:
         </div>
         <div class="sidebar-badge">v2.0 · Light Mode</div>
     </div>
-
-    <div style="background: #FEF2F2; border: 1px solid #FCA5A5; border-left: 4px solid #DA251D; border-radius: 6px; padding: 8px 10px; margin-bottom: 14px;">
-        <div style="font-weight: 700; font-size: 11px; color: #991B1B; display: flex; align-items: center; gap: 4px;">
-            <span>🇻🇳</span> CHỦ QUYỀN BIỂN ĐẢO VIỆT NAM
-        </div>
-        <div style="font-size: 11px; color: #B91C1C; margin-top: 3px; line-height: 1.35;">
-            Hệ thống khẳng định chủ quyền thiêng liêng và toàn vẹn của Việt Nam đối với <strong>Quần đảo Hoàng Sa</strong>, <strong>Quần đảo Trường Sa</strong> và toàn bộ vùng biển <strong>Biển Đông</strong>.
-        </div>
-    </div>
     """, unsafe_allow_html=True)
 
     # Load and display manifest summary
@@ -118,7 +109,6 @@ nav = st.navigation(pages)
 with st.sidebar:
     st.markdown("---")
     st.caption("© 2026 Hải đồ số · Đồ án Phân tích Mạng Xã hội")
-    st.caption("🇻🇳 Bản đồ tuân thủ chủ quyền biển đảo Việt Nam: Hoàng Sa, Trường Sa & Biển Đông.")
     st.caption("Dữ liệu: IMF PortWatch, UNCTADstat, Global Fishing Watch, OpenStreetMap, OpenSeaMap.")
 
 nav.run()

@@ -207,8 +207,6 @@ with st.sidebar:
 tab_map, tab_trips = st.tabs(["Hải đồ mạng lưới", "Hoạt ảnh luồng tàu (TripsLayer)"])
 
 with tab_map:
-    st.info("🇻🇳 **Khẳng định Chủ quyền Biển Đảo Quốc gia**: Bản đồ thể hiện đầy đủ và nhất quán chủ quyền toàn vẹn lãnh thổ của Việt Nam đối với **Quần đảo Hoàng Sa** (TP. Đà Nẵng), **Quần đảo Trường Sa** (Tỉnh Khánh Hòa) và toàn bộ vùng biển **Biển Đông (Việt Nam)** theo luật pháp quốc tế và UNCLOS 1982.")
-
     # Assemble Pydeck layers dynamically
     active_layers = []
 
@@ -358,4 +356,4 @@ with st.expander(":material/lightbulb: Kiến thức SNA: Cấu trúc Tô-pô & 
     Đo lường tần suất một cảng nằm trên đường đi ngắn nhất giữa tất cả các cặp cảng khác trong mạng lưới toàn cầu, phản ánh vai trò "người gác cổng" (gatekeeper) của các eo biển và cảng trung chuyển chiến lược.
     """)
 
-st.caption("Nguồn dữ liệu: IMF PortWatch, UNCTADstat, Global Fishing Watch, OpenSeaMap. Khẳng định chủ quyền: Hoàng Sa & Trường Sa là của Việt Nam | Biển Đông (Việt Nam).")
+st.caption("Nguồn dữ liệu: IMF PortWatch, UNCTADstat, Global Fishing Watch, OpenSeaMap.")
